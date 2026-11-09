@@ -1,0 +1,6 @@
+{
+  "name": "Local Forecast Card",
+  "homeassistant": "2026.11.0",
+  "filename": "local-forecast-card.js",
+  "render_readme": true
+}
