@@ -1,1 +1,2 @@
 * text=auto eol=lf
+dist/local-forecast-card.js -text -whitespace linguist-generated=true

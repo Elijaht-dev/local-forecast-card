@@ -17,6 +17,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Verify the checked-in Marketplace module
+        run: git diff --exit-code -- dist/local-forecast-card.js
       - uses: hacs/action@main
         if: ${{ !github.event.repository.private }}
         with:
