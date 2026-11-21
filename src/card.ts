@@ -34,11 +34,17 @@ const statuses: Record<string, string> = {
   error: "Open Forecast Lab to see why the forecast is unavailable.",
 };
 let chartModule: Promise<unknown> | undefined;
-const chartUrl = "/local_forecast_static/forecast-lab.js?v=0.1.0";
+const chartPath = "/local_forecast_static/forecast-lab.js";
+type Panels = Record<string, { config?: { _panel_custom?: { module_url?: string } } }>;
 
-function loadChart(): Promise<unknown> {
+function loadChart(hass: Hass): Promise<unknown> {
   if (customElements.get("local-forecast-chart")) return Promise.resolve();
-  chartModule ??= import(/* @vite-ignore */ chartUrl).catch((error: unknown) => {
+  chartModule ??= hass.callWS<Panels>({ type: "get_panels" }).then(panels => {
+    // Reuse the panel's module URL. Dashboard viewers may have no admin panel.
+    const registered = panels["forecast-lab"]?.config?._panel_custom?.module_url;
+    const url = registered?.startsWith(chartPath + "?") ? registered : chartPath;
+    return import(/* @vite-ignore */ url);
+  }).catch((error: unknown) => {
     chartModule = undefined;
     throw error;
   });
@@ -134,7 +140,7 @@ export class LocalForecastCard extends LitElement {
     this.pending = true;
     try {
       const result = await this.hass.callWS<Result>({ type: "local_forecast/card", entity_id: entity });
-      if (result.forecast) await loadChart();
+      if (result.forecast) await loadChart(this.hass);
       if (this.config?.entity === entity) {
         this.error = "";
         this.result = result;
