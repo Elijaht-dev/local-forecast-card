@@ -4,11 +4,19 @@ Plot published forecasts from the [Local Forecast integration](https://github.co
 
 ![Local Forecast solar card in Home Assistant](docs/forecast-card.jpg)
 
-## Install
+## Install the public beta
 
-Install **Local Forecast Card** from its custom repository in **Settings → Marketplace** on HA 2026.11 or later. For a manual install, copy `dist/local-forecast-card.js` to `config/www/` and add `/local/local-forecast-card.js` as a JavaScript module in Dashboard resources.
+Use Home Assistant 2026.11 or later. Pair the Local Forecast integration with your engine, open **Forecast Lab**, save a project and select **Publish forecast**. The card reads the project's forecast sensor through Home Assistant. [Integration and engine setup](https://github.com/Elijaht-dev/local-forecast#install-the-public-beta)
 
-Add a **Local Forecast** card in the dashboard editor and choose a forecast sensor. Forecast Lab can also generate the YAML. Use the matching version of the integration, which provides the chart and data API.
+1. In **Settings → Marketplace**, add `https://github.com/Elijaht-dev/local-forecast-card` as a custom repository of type **Dashboard**.
+2. Open **Local Forecast Card**, enable **Pre-release** and install the beta. Reload your browser. If you manage dashboard resources in YAML, add the module URL shown by the Marketplace.
+3. Edit your dashboard, choose **Add card → Local Forecast**, and select the project's forecast sensor in the visual editor.
+
+For a manual install, download `local-forecast-card.js` from the beta release, copy it to `config/www/`, and add `/local/local-forecast-card.js` as a **JavaScript module** under **Settings → Dashboards → Resources**. Restart Home Assistant if you just created `www`, then reload your browser. [Download the beta module](https://github.com/Elijaht-dev/local-forecast-card/releases/download/v0.1.1-beta.1/local-forecast-card.js)
+
+## Configure the card
+
+Choose the history and forecast windows in the visual editor, or use YAML. Replace the example entity with the published forecast sensor from your project.
 
 ```yaml
 type: custom:local-forecast-card
@@ -27,6 +35,6 @@ npm ci
 npm run build
 ```
 
-The release asset is `dist/local-forecast-card.js`. The card uses HA authentication to read the published forecast and includes the user's configured time zone in its labels.
+The build produces `dist/local-forecast-card.js`. Dashboard viewers need read access to the forecast sensor and its measured target. Times use the forecast's configured Home Assistant time zone.
 
 MIT licensed.
